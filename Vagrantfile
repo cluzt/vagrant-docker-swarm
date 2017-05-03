@@ -12,30 +12,23 @@ Vagrant.configure("2") do |config|
         m.vm.provider "virtualbox" do |v|
             v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
             v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+            v.memory = 1024
         end
         m.vm.synced_folder ".", "/vagrant", type: "virtualbox"
 	    m.ssh.username = "ubuntu"
     end
-    config.vm.define "slave01" do |s|
-        s.vm.box = VAGRANT_BOX
-        s.vm.network :private_network, ip: "172.20.2.31"
-        s.vm.hostname = "slave01.docker.test"
-        s.vm.provider "virtualbox" do |v|
-            v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-            v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+    (1..NODE_COUNT).each do |i|
+        config.vm.define "slave0#{i}" do |sub|
+            sub.vm.box = VAGRANT_BOX
+            sub.vm.network :private_network, ip: "172.20.2.#{60 + i}"
+            sub.vm.hostname = "slave0#{i}.docker.test"
+            sub.vm.provider "virtualbox" do |v|
+                v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+                v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+                v.memory = 1024
+            end
+            sub.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+	        sub.ssh.username = "ubuntu"
         end
-        s.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-	    s.ssh.username = "ubuntu"
-    end
-    config.vm.define "slave02" do |s|
-        s.vm.box = VAGRANT_BOX
-        s.vm.network :private_network, ip: "172.20.2.32"
-        s.vm.hostname = "slave02.docker.test"
-        s.vm.provider "virtualbox" do |v|
-            v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-            v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-        end
-        s.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-	    s.ssh.username = "ubuntu"
     end
 end
