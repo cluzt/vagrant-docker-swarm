@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
         m.vm.provider "virtualbox" do |v|
             v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
             v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-            v.memory = 1024
+            v.memory = 512
         end
         m.vm.synced_folder ".", "/vagrant", type: "virtualbox"
 	    m.ssh.username = "ubuntu"
@@ -25,10 +25,10 @@ Vagrant.configure("2") do |config|
             sub.vm.provider "virtualbox" do |v|
                 v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
                 v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-                v.memory = 1024
+                v.memory = 512
             end
             sub.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-	        sub.ssh.username = "ubuntu"
+            sub.ssh.username = "ubuntu"
         end
     end
 end
